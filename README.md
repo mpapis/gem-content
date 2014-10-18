@@ -1,4 +1,3 @@
-gem-content
-===========
+# GemContent
 
 Search gems for content directory
