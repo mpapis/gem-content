@@ -21,6 +21,10 @@ describe GemContent do
     gems_all.select{|s| s.name == "fake-gem-name-one"}
   end
 
+  let(:gems_one_expected) do
+    gems_one.select{|s| s.metadata && s.metadata["some-templates"] }
+  end
+
   let(:gems_two) do
     gems_all.select{|s| s.name == "fake-gem-name-two"}
   end
@@ -34,21 +38,24 @@ describe GemContent do
   end
 
   it "detects gems" do
-    specifications = subject.send(:all_gems_matching, gems_one)
-    specifications.size.must_equal(2)
-    specifications.map(&:name).must_equal(["fake-gem-name-one", "fake-gem-name-one"])
+    subject.send(:all_gems_matching, gems_one).sort.must_equal(gems_one_expected.sort)
   end
 
   it "finds latest gems" do
-    specifications = subject.send(:active_or_latest_gems_matching, gems_one)
-    specifications.size.must_equal(1)
-    specifications.map(&:version).must_equal([Gem::Version.new("2.0.0")])
+    subject.send(:active_or_latest_gems_matching, gems_one_expected).must_equal([gems_one_expected.sort.last])
   end
 
   it "finds active gems" do
-    specifications = subject.send(:active_or_latest_gems_matching, gems_two)
-    specifications.size.must_equal(1)
-    specifications.map(&:version).must_equal([Gem::Version.new("1.0.0")])
+    subject.send(:active_or_latest_gems_matching, gems_two).must_equal([gems_two.sort.first])
+  end
+
+  it "returns gems paths" do
+    subject.get_gem_paths(gems_one_expected.sort).must_equal(
+      [
+        File.expand_path("../gems/gems/fake-gem-name-one-1.0.0/templates-v1", __FILE__),
+        File.expand_path("../gems/gems/fake-gem-name-one-2.0.0/templates-v2", __FILE__),
+      ]
+    )
   end
 
 end
