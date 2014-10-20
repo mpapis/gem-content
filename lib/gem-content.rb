@@ -33,10 +33,14 @@ private
 
   # filter active / latest gem versions
   def active_or_latest_gems_matching
-    all_gems_matching.group_by(&:name).map do |name, specifications|
-      specifications.find(&:activated) or
-      specifications.sort_by(&:version).last
-    end
+    all_gems_matching.group_by(&:name).map(&method(:active_or_latest_gem))
+  end
+
+  # find active or latest gem in given set
+  def active_or_latest_gem(params)
+    _, specifications = params
+    specifications.find(&:activated) or
+    specifications.sort_by(&:version).last
   end
 
   # filter gems with content_name metadata
