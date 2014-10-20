@@ -5,7 +5,7 @@ See the file LICENSE for copying permission.
 =end
 
 require "test_helper"
-require "context-filters/context"
+require "gem-content"
 
 describe GemContent do
 
