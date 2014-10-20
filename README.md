@@ -10,3 +10,45 @@
 [![Github Code](http://img.shields.io/badge/github-code-blue.svg)](https://github.com/mpapis/gem-content)
 
 Search gems for content directory
+
+## Installation
+
+with `rubygems`:
+
+```bash
+gem install gem-content
+```
+
+with `bundler`, add to `Gemfile`:
+
+```ruby
+gem "gem-content"
+```
+
+and run:
+
+```bash
+bundle install
+```
+
+## Defining gems
+
+In the gems you want to be detected add in `*.gemspec` file:
+
+```ruby
+s.metadata = {
+  "some-templates" => "templates-v1"
+}
+```
+
+Where the `some-templates` is the search key and `templates-v1` is path
+inside of the gem, do not forget to add this path to `s.files`.
+
+## Finding gem paths
+
+```ruby
+require "gem-content"
+
+GemContent.get_gem_paths("some-templates")
+# => ["/path/to/gems/gem-name-version/templates-v1"]
+```
