@@ -47,9 +47,17 @@ describe GemContent do
     subject.send(:active_or_latest_gems_matching).must_equal([gems_one_expected.sort.last])
   end
 
+  it "finds latest gem from list" do
+    subject.send(:active_or_latest_gem, ["fake-gem-name-one", gems_one_expected]).must_equal(gems_one_expected.sort.last)
+  end
+
   it "finds active gems" do
     subject.expects(:all_gems_matching).returns(gems_two)
     subject.send(:active_or_latest_gems_matching).must_equal([gems_two.sort.first])
+  end
+
+  it "finds active gem on list" do
+    subject.send(:active_or_latest_gem, ["fake-gem-name-two", gems_two]).must_equal(gems_two.sort.first)
   end
 
   it "returns gems paths" do
