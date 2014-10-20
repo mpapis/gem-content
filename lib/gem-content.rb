@@ -14,8 +14,8 @@ class GemContent
     @content_name = content_name
   end
 
-  def get_gem_paths(specifications = active_or_latest_gems_matching)
-    specifications.map do |specification|
+  def get_gem_paths
+    active_or_latest_gems_matching.map do |specification|
       File.join(
         specification.full_gem_path,
         specification.metadata[content_name]
@@ -25,18 +25,22 @@ class GemContent
 
 private
 
-  def active_or_latest_gems_matching(specifications = all_gems_matching)
-    specifications.group_by(&:name).map do |name, specifications|
+  def active_or_latest_gems_matching
+    all_gems_matching.group_by(&:name).map do |name, specifications|
       specifications.find(&:activated) or
       specifications.sort_by(&:version).last
     end
   end
 
-  def all_gems_matching(specifications = Gem::Specification._all)
-    specifications.select do |specification|
+  def all_gems_matching
+    all_gems.select do |specification|
       specification.metadata.is_a?(Hash) and
       specification.metadata[content_name]
     end
+  end
+
+  def all_gems
+    Gem::Specification._all
   end
 
 end

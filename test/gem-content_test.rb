@@ -38,19 +38,23 @@ describe GemContent do
   end
 
   it "detects gems" do
-    subject.send(:all_gems_matching, gems_one).sort.must_equal(gems_one_expected.sort)
+    subject.expects(:all_gems).returns(gems_one)
+    subject.send(:all_gems_matching).sort.must_equal(gems_one_expected.sort)
   end
 
   it "finds latest gems" do
-    subject.send(:active_or_latest_gems_matching, gems_one_expected).must_equal([gems_one_expected.sort.last])
+    subject.expects(:all_gems_matching).returns(gems_one_expected)
+    subject.send(:active_or_latest_gems_matching).must_equal([gems_one_expected.sort.last])
   end
 
   it "finds active gems" do
-    subject.send(:active_or_latest_gems_matching, gems_two).must_equal([gems_two.sort.first])
+    subject.expects(:all_gems_matching).returns(gems_two)
+    subject.send(:active_or_latest_gems_matching).must_equal([gems_two.sort.first])
   end
 
   it "returns gems paths" do
-    subject.get_gem_paths(gems_one_expected.sort).must_equal(
+    subject.expects(:active_or_latest_gems_matching).returns(gems_one_expected.sort)
+    subject.get_gem_paths.must_equal(
       [
         File.expand_path("../gems/gems/fake-gem-name-one-1.0.0/templates-v1", __FILE__),
         File.expand_path("../gems/gems/fake-gem-name-one-2.0.0/templates-v2", __FILE__),
