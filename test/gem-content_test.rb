@@ -62,4 +62,13 @@ describe GemContent do
     )
   end
 
+  it "returns gems paths - no mocking - the real test" do
+    subject.get_gem_paths.must_equal(
+      [
+        File.expand_path("../gems/gems/fake-gem-name-one-2.0.0/templates-v2", __FILE__),
+        File.expand_path("../gems/gems/fake-gem-name-two-1.0.0/templates-v1", __FILE__),
+      ]
+    )
+  end
+
 end
