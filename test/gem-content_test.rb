@@ -79,4 +79,12 @@ describe GemContent do
     )
   end
 
+  it "has class helper" do
+    test_subject = mock()
+    test_subject.expects(:get_gem_paths).once.returns([:a, :b])
+    GemContent.expects(:new).once.with("some-templates").returns(test_subject)
+
+    GemContent.get_gem_paths("some-templates").must_equal([:a, :b])
+  end
+
 end

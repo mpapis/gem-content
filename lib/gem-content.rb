@@ -10,6 +10,13 @@ require "gem-content/version"
 # return pull path to the content
 class GemContent
 
+  # shortcut to initialize and get the paths in one line
+  # @param content_name [String] the path marker to read from gems metadata
+  # @return [Array<String>] all gems paths containing requested content
+  def self.get_gem_paths(content_name)
+    self.new(content_name).get_gem_paths
+  end
+
   # @return [String] content name filter
   attr_reader :content_name
 
@@ -19,7 +26,7 @@ class GemContent
     @content_name = content_name
   end
 
-  # returns [Array<String>] all gems paths containing requested content
+  # @return [Array<String>] all gems paths containing requested content
   def get_gem_paths
     active_or_latest_gems_matching.map do |specification|
       File.join(
